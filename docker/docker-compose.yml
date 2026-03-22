@@ -11,14 +11,12 @@ services:
       - ../models:/app/models
 
   ui:
-    image: python:3.10-slim
-    working_dir: /app
-    volumes:
-      - ..:/app
-    command: >
-      sh -c "pip install streamlit requests matplotlib seaborn &&
-             streamlit run app.py --server.port 8501 --server.address 0.0.0.0"
+    build:
+      context: ../ui
+      dockerfile: Dockerfile
     ports:
-      - "8501:8501"
+      - "3000:3000"
     depends_on:
       - api
+    environment:
+      - REACT_APP_API_URL=http://localhost:8000

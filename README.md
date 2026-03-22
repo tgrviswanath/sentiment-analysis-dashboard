@@ -1,104 +1,119 @@
 # Project 01 - Sentiment Analysis Dashboard
 
 Analyze text sentiment (positive/negative) using TF-IDF + Logistic Regression.
+React frontend + FastAPI backend.
 
 ## Project Structure
 
 ```
 project-01-sentiment-analysis-dashboard/
 ├── src/
-│   ├── preprocess.py       # Text cleaning
-│   ├── train.py            # Model training
-│   ├── predict.py          # Prediction logic
-│   └── api.py              # FastAPI backend
+│   ├── preprocess.py           # Text cleaning
+│   ├── train.py                # Model training
+│   ├── predict.py              # Prediction logic
+│   └── api.py                  # FastAPI backend
 ├── tests/
-│   └── test_sentiment.py   # Unit tests
+│   └── test_sentiment.py       # Unit tests
 ├── docker/
+│   ├── Dockerfile              # API Dockerfile
+│   └── docker-compose.yml      # Full stack
+├── ui/                         # React frontend
+│   ├── public/
+│   │   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── SingleAnalysis.jsx
+│   │   │   └── BatchAnalysis.jsx
+│   │   ├── App.jsx
+│   │   ├── api.js
+│   │   └── index.js
 │   ├── Dockerfile
-│   └── docker-compose.yml
-├── models/                 # Saved model files (auto-created)
-├── data/                   # Dataset files
-├── app.py                  # Streamlit UI
+│   └── package.json
+├── models/                     # Saved model files (auto-created)
+├── data/
 ├── requirements.txt
-└── .github/
-    └── workflows/
-        └── ci.yml          # GitHub Actions CI/CD
+└── README.md
 ```
 
 ## Local Run (Step by Step)
 
-### Step 1 - Create virtual environment
+### Backend Setup
+
+#### Step 1 - Create virtual environment
 ```bash
 python -m venv venv
 venv\Scripts\activate        # Windows
 source venv/bin/activate     # Mac/Linux
 ```
 
-### Step 2 - Install dependencies
+#### Step 2 - Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### Step 3 - Train the model
+#### Step 3 - Train the model
 ```bash
 python src/train.py
 ```
-This downloads the NLTK movie_reviews dataset and saves model to models/
+Downloads NLTK movie_reviews dataset and saves model to models/
 
-### Step 4 - Start FastAPI backend
+#### Step 4 - Start FastAPI backend
 ```bash
 uvicorn src.api:app --reload --port 8000
 ```
-API runs at http://localhost:8000
-API docs at http://localhost:8000/docs
+- API runs at http://localhost:8000
+- API docs at http://localhost:8000/docs
 
-### Step 5 - Start Streamlit UI (new terminal)
+### Frontend Setup (new terminal)
+
+#### Step 5 - Install React dependencies
 ```bash
-streamlit run app.py
+cd ui
+npm install
 ```
-UI runs at http://localhost:8501
 
-### Step 6 - Run tests
+#### Step 6 - Start React UI
+```bash
+npm start
+```
+- UI runs at http://localhost:3000
+
+### Run Tests
 ```bash
 pytest tests/ -v
 ```
 
-## Docker Run
+## Docker Run (Full Stack)
 
 ```bash
 cd docker
 docker-compose up --build
 ```
 - API: http://localhost:8000
-- UI:  http://localhost:8501
+- UI:  http://localhost:3000
 
 ## API Usage
 
 ```bash
-curl -X POST http://localhost:8000/predict \
+# Single prediction
+curl -X POST http://localhost:8000/api/predict \
   -H "Content-Type: application/json" \
   -d '{"text": "This movie was absolutely fantastic!"}'
-```
 
-Response:
-```json
+# Response
 {
   "label": "pos",
   "confidence": 94.5
 }
 ```
 
-## Dataset
-- NLTK Movie Reviews (built-in, auto-downloaded)
-- 2000 reviews, balanced pos/neg
-
 ## Tech Stack
+
 | Layer | Tool |
 |-------|------|
-| UI | Streamlit |
+| UI | React 18, MUI, Recharts |
 | Backend | FastAPI |
 | Preprocessing | NLTK |
 | Feature Extraction | TF-IDF (scikit-learn) |
 | Model | Logistic Regression |
-| Visualization | Matplotlib, Seaborn |
 | Deployment | Docker |
