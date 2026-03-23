@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+
+# Models
+nlp-service/models/*.pkl
+
+# Node
+frontend/node_modules/
+frontend/build/
+
+# OS
+.DS_Store
