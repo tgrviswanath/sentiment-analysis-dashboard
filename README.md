@@ -25,15 +25,33 @@ Microservice NLP system that classifies text as Positive or Negative using TF-ID
 └─────────────────────────────────────────────────────────────┘
 ```
 
+---
+
+## Why Microservices
+
+| Benefit               | How                                                    |
+|-----------------------|--------------------------------------------------------|
+| Independent deployment | Each service has its own Docker image                 |
+| Independent scaling   | Scale nlp-service only when needed                    |
+| Independent venv      | Each service has its own requirements.txt             |
+| No shared code        | Services talk only via HTTP                           |
+| Easy to swap          | Replace nlp-service with BERT later, backend unchanged |
+
+---
+
 ## Model Performance
 
 Trained on NLTK Movie Reviews (2000 documents, 80/20 split):
 
 ```
               precision    recall  f1-score   support
+
          neg       0.82      0.81      0.82       199
          pos       0.82      0.83      0.82       201
+
     accuracy                           0.82       400
+   macro avg       0.82      0.82      0.82       400
+weighted avg       0.82      0.82      0.82       400
 ```
 
 ---
@@ -100,6 +118,7 @@ Opens at: http://localhost:8080
 ## Environment Files
 
 ### `backend/.env`
+
 ```
 APP_NAME=Sentiment Analysis API
 APP_VERSION=1.0.0
@@ -108,11 +127,13 @@ NLP_SERVICE_URL=http://localhost:8001
 ```
 
 ### `frontend/.env`
+
 ```
 REACT_APP_API_URL=http://localhost:8000
 ```
 
 ### `nlp-service/.env`
+
 ```
 SERVICE_PORT=8001
 ```
@@ -141,12 +162,12 @@ curl -X POST http://localhost:8000/api/v1/predict \
 
 Ready-to-use test inputs are in the `samples/` folder:
 
-| File | Use |
-|------|-----|
-| `samples/positive_reviews.txt` | 5 positive texts — paste into Single tab |
-| `samples/negative_reviews.txt` | 5 negative texts — paste into Single tab |
-| `samples/neutral_reviews.txt` | 5 neutral texts — paste into Single tab |
-| `samples/batch_input.txt` | 10 mixed texts — paste into Batch tab |
+| File                            | Use                                      |
+|---------------------------------|------------------------------------------|
+| `samples/positive_reviews.txt`  | 5 positive texts — paste into Single tab |
+| `samples/negative_reviews.txt`  | 5 negative texts — paste into Single tab |
+| `samples/neutral_reviews.txt`   | 5 neutral texts — paste into Single tab  |
+| `samples/batch_input.txt`       | 10 mixed texts — paste into Batch tab    |
 
 ---
 
@@ -172,11 +193,11 @@ pytest ../tests/backend/ -v
 docker-compose up --build
 ```
 
-| Service | URL |
-|---------|-----|
-| Frontend | http://localhost:3000 |
-| Backend API docs | http://localhost:8000/docs |
-| NLP Service docs | http://localhost:8001/docs |
+| Service          | URL                          |
+|------------------|------------------------------|
+| Frontend         | http://localhost:3000        |
+| Backend API docs | http://localhost:8000/docs   |
+| NLP Service docs | http://localhost:8001/docs   |
 
 ---
 
@@ -229,10 +250,10 @@ project-01-sentiment-analysis-dashboard/
 
 ```
 POST /api/v1/predict
-Body: { "text": "string" }
+Body:     { "text": "string" }
 Response: { "label": "pos|neg", "sentiment": "Positive|Negative", "confidence": float }
 
 POST /api/v1/predict/batch
-Body: { "texts": ["string", ...] }
-Response: [{ "label", "sentiment", "confidence" }, ...]
+Body:     { "texts": ["string", ...] }
+Response: [{ "label": "pos|neg", "sentiment": "Positive|Negative", "confidence": float }]
 ```
